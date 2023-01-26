@@ -15,6 +15,44 @@ class Calculator {
         this.currentOperand = this.currentOperand.toString().slice(0, -1)
     }
 
+    analyzeBtnClick(clickedBtn){
+        const btns = document.querySelectorAll('button');
+        let btnType = undefined
+
+        btns.forEach(btn => { if(btn.textContent === clickedBtn){ btnType = btn; console.log(btn)}})
+        this.activateBtn(btnType)
+    }
+
+    activateBtn(type){
+
+        let btnType = type.attributes[0].name.slice(5)
+
+        if(btnType === 'equals'){
+            type.classList.add('clicked-equals');
+        }
+        else if(btnType === 'operation'){
+            type.classList.add('clicked-operation');
+        }
+        else if(btnType === 'all-clear' || btnType === 'delete'){
+            btnType = 'erase'
+            type.classList.add('clicked-erase');
+        }
+        else if(btnType === 'number'){
+            type.classList.add('clicked-number');
+        }
+        this.disableTransition(btnType);
+    }
+
+    disableTransition(element){
+        function removeTransition(e){   // Function with (e)event info as argument.
+            if(e.propertyName !== 'transform') return; // if
+            e.target.classList.remove(`clicked-${element}`);   // else
+        }
+
+        const actionBtns = document.querySelectorAll('button');
+        actionBtns.forEach(btn => btn.addEventListener('transitionend', removeTransition));
+    }
+
     appendNumber(number){
         if(number === '.' && this.currentOperand.includes('.')) return
         this.currentOperand = this.currentOperand.toString() + number.toString()
@@ -106,6 +144,7 @@ numberButtons.forEach( button =>{
     button.addEventListener('click', ()=>{
         calculator.appendNumber(button.innerText)
         calculator.updateDisplay()
+        calculator.activateBtn(button)
     })
 })
 
@@ -113,50 +152,63 @@ operationButtons.forEach( button =>{
     button.addEventListener('click', ()=>{
         calculator.chooseOperation(button.innerText)
         calculator.updateDisplay()
+        calculator.activateBtn(button)
     })
 })
 
 equalsButton.addEventListener('click', button=>{
     calculator.compute()
     calculator.updateDisplay()
+    calculator.activateBtn(button.target)
 })
 
 allClearButton.addEventListener('click', button =>{
     calculator.clear()
     calculator.updateDisplay()
+    calculator.activateBtn(button.target)
+
 })
 
 deleteButton.addEventListener('click', button =>{
     calculator.delete()
     calculator.updateDisplay()
+    calculator.activateBtn(button.target)
 })
 
 window.addEventListener('keydown', (e)=>{
    let keyValue = e.key
-   if((keyValue > -1 && keyValue < 10) || keyValue === '.'){
+
+   if((keyValue > -1 && keyValue < 10) || keyValue === '.'){;
+        console.log(e)
         calculator.appendNumber(keyValue)
         calculator.updateDisplay()
+        calculator.analyzeBtnClick(keyValue)
    }
-   else if(keyValue === 'Enter'){
+   else if(keyValue === 'Enter' || keyValue === '='){
         calculator.compute()
         calculator.updateDisplay()
+        calculator.analyzeBtnClick('=')
     }
-   else if(keyValue === 'Backspace'){
+   else if(keyValue === 'Backspace' || keyValue === 'Delete'){
         calculator.delete()
         calculator.updateDisplay()
+        calculator.analyzeBtnClick('DEL')
     }
    else if(keyValue === 'c' || keyValue === 'C'){
         calculator.clear()
         calculator.updateDisplay()
+        calculator.analyzeBtnClick('AC')
    }
    else if(keyValue === '+' ||
            keyValue === '-' || 
-           keyValue === 'x' ||
            keyValue === '*' ||
            keyValue === '%' || 
            keyValue === '/'){
         calculator.chooseOperation(keyValue)
         calculator.updateDisplay() 
+        if(keyValue === '*'){keyValue = 'x'}
+        if(keyValue === '/'){keyValue = '÷'}
+        calculator.analyzeBtnClick(keyValue)
    }
    else{
     return
