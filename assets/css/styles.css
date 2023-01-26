@@ -48,13 +48,13 @@ body {
     color: white;
     border: 0px;
     background-color: rgba(255, 255 ,255, 0.05);
-    transition: 1s cubic-bezier(0.075, 0.82, 0.165, 1);
+    transition: .7s cubic-bezier(0.075, 0.82, 0.165, 1);
+    transition: all .3s ease !important;
     box-shadow: 0 2px 2px rgba(0, 0, 0, 0.75);
 }
 
-.calculator-grid-container > button:hover {
-    background-color: rgba(255, 255 ,255, 0.50);
-    transform: scale(.91);
+.calculator-grid-container > [class*='clicked'] {
+    transform: scale(.9);
     font-size: 1.3rem;
 }
 
@@ -89,15 +89,18 @@ body {
     color: rgba(255, 255, 255, 0.90);
 }
 
-.ac:hover, .del:hover{
-    background-color: rgba(253, 131, 131, 0.836) !important;
+.calculator-grid-container > .clicked-number {
+    background-color: rgba(255, 255 ,255, 0.4);
 }
-.operation:hover{
-    background-color: rgba(131, 239, 253, 0.733) !important;
+.calculator-grid-container > .clicked-erase{
+    background-color: rgba(253, 131, 131, 0.836);
+}
+.calculator-grid-container > .clicked-operation{
+    background-color: rgba(131, 239, 253, 0.733);
     color: black;
 }
-.equals:hover{
-    background-color: rgba(81, 255, 154, 0.712) !important;
+.calculator-grid-container > .clicked-equals{
+    background-color: rgba(81, 255, 154, 0.712);
     color: black;
 }
 .footer {
@@ -123,6 +126,5 @@ body {
    }
    .footer {
     transform: scale(.8);
-   }
-    
+   }    
 }
